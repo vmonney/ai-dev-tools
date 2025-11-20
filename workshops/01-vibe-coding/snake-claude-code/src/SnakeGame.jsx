@@ -67,7 +67,7 @@ const SnakeGame = () => {
       const newSnake = [newHead, ...prevSnake];
 
       if (newHead.x === food.x && newHead.y === food.y) {
-        setScore(prev => prev + 10);
+        setScore(prev => prev + 5);
         setFood(generateFood());
         return newSnake;
       }
@@ -171,6 +171,7 @@ const SnakeGame = () => {
                       : 'bg-gray-900'}
                   ${isCellFood(x, y) ? 'animate-pulse' : ''}
                   transition-colors duration-100
+                  border border-gray-800
                 `}
                 style={{ width: CELL_SIZE, height: CELL_SIZE }}
               />
