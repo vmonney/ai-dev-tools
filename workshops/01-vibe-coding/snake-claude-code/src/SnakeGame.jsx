@@ -14,6 +14,7 @@ const SnakeGame = () => {
   const [paused, setPaused] = useState(false);
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
+  const [wallMode, setWallMode] = useState(true);
 
   const directionRef = useRef(direction);
 
@@ -48,18 +49,27 @@ const SnakeGame = () => {
 
     setSnake(prevSnake => {
       const head = prevSnake[0];
-      const newHead = {
+      let newHead = {
         x: head.x + directionRef.current.x,
         y: head.y + directionRef.current.y,
       };
 
-      if (
-        newHead.x < 0 ||
-        newHead.x >= GRID_SIZE ||
-        newHead.y < 0 ||
-        newHead.y >= GRID_SIZE ||
-        prevSnake.some(segment => segment.x === newHead.x && segment.y === newHead.y)
-      ) {
+      if (wallMode) {
+        if (
+          newHead.x < 0 ||
+          newHead.x >= GRID_SIZE ||
+          newHead.y < 0 ||
+          newHead.y >= GRID_SIZE
+        ) {
+          setGameOver(true);
+          return prevSnake;
+        }
+      } else {
+        newHead.x = (newHead.x + GRID_SIZE) % GRID_SIZE;
+        newHead.y = (newHead.y + GRID_SIZE) % GRID_SIZE;
+      }
+
+      if (prevSnake.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
         setGameOver(true);
         return prevSnake;
       }
@@ -75,7 +85,7 @@ const SnakeGame = () => {
       newSnake.pop();
       return newSnake;
     });
-  }, [gameOver, paused, gameStarted, food, generateFood]);
+  }, [gameOver, paused, gameStarted, food, generateFood, wallMode]);
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -147,6 +157,12 @@ const SnakeGame = () => {
       <div className="mb-6 text-center">
         <h1 className="text-5xl font-bold text-white mb-2">Snake Game</h1>
         <div className="text-3xl font-semibold text-green-400">Score: {score}</div>
+        <button
+          onClick={() => setWallMode(!wallMode)}
+          className="mt-3 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors"
+        >
+          Mode: {wallMode ? 'Walls' : 'Pass-Through'}
+        </button>
       </div>
 
       <div className="relative bg-gray-800 p-2 rounded-lg shadow-2xl">
@@ -218,6 +234,7 @@ const SnakeGame = () => {
         <div className="flex flex-col gap-1">
           <p>Arrow Keys - Move</p>
           <p>SPACE - Pause/Resume</p>
+          <p className="text-sm text-gray-400 mt-2">Click button above to toggle wall mode</p>
         </div>
       </div>
     </div>
