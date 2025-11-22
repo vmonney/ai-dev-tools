@@ -101,8 +101,6 @@ python manage.py runserver
 - **Django Test Framework** - Testing
 
 ## Documentation
-
-- **HOMEWORK_ANSWERS.md** - Detailed answers to all homework questions
 - **DJANGO_TUTORIAL.md** - Step-by-step tutorial for building the app from scratch
 
 ## Development
