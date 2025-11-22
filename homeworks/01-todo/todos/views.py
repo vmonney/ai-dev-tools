@@ -2,7 +2,31 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django import forms
 from .models import Todo
+
+
+class TodoForm(forms.ModelForm):
+    """Custom form for TODO with date format help."""
+    due_date = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'placeholder': 'YYYY-MM-DD'
+        }),
+        help_text='Format: YYYY-MM-DD (e.g., 2025-12-31) or use the date picker'
+    )
+
+    class Meta:
+        model = Todo
+        fields = ['title', 'description', 'due_date']
+
+
+class TodoUpdateForm(TodoForm):
+    """Form for updating TODO with is_resolved field."""
+    class Meta:
+        model = Todo
+        fields = ['title', 'description', 'due_date', 'is_resolved']
 
 
 class TodoListView(ListView):
@@ -38,7 +62,7 @@ class TodoCreateView(CreateView):
     """View to create a new TODO."""
     model = Todo
     template_name = 'todos/todo_form.html'
-    fields = ['title', 'description', 'due_date']
+    form_class = TodoForm
     success_url = reverse_lazy('todo-list')
 
     def form_valid(self, form):
@@ -51,7 +75,7 @@ class TodoUpdateView(UpdateView):
     """View to update an existing TODO."""
     model = Todo
     template_name = 'todos/todo_form.html'
-    fields = ['title', 'description', 'due_date', 'is_resolved']
+    form_class = TodoUpdateForm
     success_url = reverse_lazy('todo-list')
 
     def form_valid(self, form):
