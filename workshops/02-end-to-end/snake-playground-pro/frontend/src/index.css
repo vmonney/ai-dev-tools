@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 220 20% 6%;
+    --foreground: 150 100% 70%;
+
+    --card: 220 20% 10%;
+    --card-foreground: 150 100% 70%;
+
+    --popover: 220 20% 10%;
+    --popover-foreground: 150 100% 70%;
+
+    --primary: 150 100% 50%;
+    --primary-foreground: 220 20% 6%;
+
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 150 60% 80%;
+
+    --muted: 220 15% 20%;
+    --muted-foreground: 220 10% 50%;
+
+    --accent: 180 100% 50%;
+    --accent-foreground: 220 20% 6%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 150 50% 20%;
+    --input: 220 15% 15%;
+    --ring: 150 100% 50%;
+
+    --radius: 0.5rem;
+
+    --glow-primary: 0 0 20px hsl(150 100% 50% / 0.5), 0 0 40px hsl(150 100% 50% / 0.3);
+    --glow-accent: 0 0 20px hsl(180 100% 50% / 0.5), 0 0 40px hsl(180 100% 50% / 0.3);
+    --glow-destructive: 0 0 20px hsl(0 100% 50% / 0.5), 0 0 40px hsl(0 100% 50% / 0.3);
+
+    --sidebar-background: 220 20% 8%;
+    --sidebar-foreground: 150 100% 70%;
+    --sidebar-primary: 150 100% 50%;
+    --sidebar-primary-foreground: 220 20% 6%;
+    --sidebar-accent: 220 15% 15%;
+    --sidebar-accent-foreground: 150 60% 80%;
+    --sidebar-border: 150 50% 20%;
+    --sidebar-ring: 150 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .font-pixel {
+    font-family: 'Press Start 2P', cursive;
+  }
+}
+
+@layer components {
+  .glow-primary {
+    box-shadow: var(--glow-primary);
+  }
+
+  .glow-accent {
+    box-shadow: var(--glow-accent);
+  }
+
+  .glow-destructive {
+    box-shadow: var(--glow-destructive);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px hsl(150 100% 50% / 0.8), 0 0 20px hsl(150 100% 50% / 0.5);
+  }
+
+  .text-glow-accent {
+    text-shadow: 0 0 10px hsl(180 100% 50% / 0.8), 0 0 20px hsl(180 100% 50% / 0.5);
+  }
+
+  .arcade-border {
+    @apply border-2 border-primary rounded-lg;
+    box-shadow: inset 0 0 20px hsl(150 100% 50% / 0.1), var(--glow-primary);
+  }
+
+  .game-canvas {
+    @apply bg-card rounded-lg;
+    box-shadow: inset 0 0 50px hsl(220 20% 3%), var(--glow-primary);
+  }
+
+  .nav-link {
+    @apply relative px-4 py-2 text-muted-foreground transition-all duration-300 hover:text-primary;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-0.5 bg-primary scale-x-0 transition-transform duration-300 origin-left;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply scale-x-100;
+  }
+
+  .nav-link.active {
+    @apply text-primary text-glow;
+  }
+
+  .scanlines {
+    position: relative;
+  }
+
+  .scanlines::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(0 0% 0% / 0.03) 2px,
+      hsl(0 0% 0% / 0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+}
+
+@layer utilities {
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: var(--glow-primary);
+    }
+    50% {
+      box-shadow: 0 0 30px hsl(150 100% 50% / 0.7), 0 0 60px hsl(150 100% 50% / 0.4);
+    }
+  }
+
+  .animate-snake-move {
+    animation: snake-move 0.2s ease-in-out;
+  }
+
+  @keyframes snake-move {
+    0% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+  }
+
+  .animate-food-pulse {
+    animation: food-pulse 1s ease-in-out infinite;
+  }
+
+  @keyframes food-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
