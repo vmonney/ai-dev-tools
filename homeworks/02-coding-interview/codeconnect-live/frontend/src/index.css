@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 14%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 14%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 187 96% 42%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 263 70% 50%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
+
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
+    --ring: 187 96% 42%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 187 96% 42%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 187 96% 42%;
+
+    /* Code editor colors */
+    --editor-bg: 222 47% 8%;
+    --editor-line-number: 215 20% 45%;
+    --editor-selection: 187 96% 42% / 0.2;
+    --editor-cursor: 187 96% 42%;
+
+    /* Gradient tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(187 96% 42%), hsl(263 70% 50%));
+    --gradient-subtle: linear-gradient(180deg, hsl(222 47% 14%), hsl(222 47% 11%));
+    --gradient-glow: radial-gradient(circle at 50% 0%, hsl(187 96% 42% / 0.15), transparent 50%);
+
+    /* Shadow tokens */
+    --shadow-sm: 0 1px 2px hsl(222 47% 5% / 0.5);
+    --shadow-md: 0 4px 12px hsl(222 47% 5% / 0.6);
+    --shadow-lg: 0 8px 30px hsl(222 47% 5% / 0.7);
+    --shadow-glow: 0 0 40px hsl(187 96% 42% / 0.3);
+
+    /* Animation tokens */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 187 96% 32%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 263 70% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 187 96% 32%;
+
+    --editor-bg: 210 40% 98%;
+    --editor-line-number: 215 16% 60%;
+    --editor-selection: 187 96% 32% / 0.2;
+    --editor-cursor: 187 96% 32%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(187 96% 32%), hsl(263 70% 50%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 98%));
+    --gradient-glow: radial-gradient(circle at 50% 0%, hsl(187 96% 32% / 0.1), transparent 50%);
+
+    --shadow-sm: 0 1px 2px hsl(222 47% 11% / 0.05);
+    --shadow-md: 0 4px 12px hsl(222 47% 11% / 0.1);
+    --shadow-lg: 0 8px 30px hsl(222 47% 11% / 0.15);
+    --shadow-glow: 0 0 40px hsl(187 96% 32% / 0.2);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+  }
+
+  .glow-primary {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--gradient-primary);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    pointer-events: none;
+  }
+}
+
+@layer utilities {
+  .animate-in {
+    animation: fade-in 0.3s ease-out, scale-in 0.2s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+
+  .animate-cursor-blink {
+    animation: cursor-blink 1s step-end infinite;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.95); }
+  to { transform: scale(1); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--secondary));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Monaco editor overrides */
+.monaco-editor {
+  --vscode-editor-background: hsl(var(--editor-bg)) !important;
+}
+
+.monaco-editor .margin {
+  background: hsl(var(--editor-bg)) !important;
+}
+
+/* Remote cursor styles for collaborative editing */
+.remote-cursor {
+  background-color: #a855f7;
+  width: 2px !important;
+  animation: cursor-blink 1s infinite;
+}
+
+.remote-cursor::after {
+  content: attr(data-name);
+  position: absolute;
+  top: -20px;
+  left: 0;
+  background: #a855f7;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  z-index: 100;
+}
+
+.remote-cursor-line {
+  border-left: 2px solid #a855f7;
+  margin-left: -2px;
+}
+
+/* Participant indicator colors */
+.cursor-purple { background-color: #a855f7 !important; border-color: #a855f7 !important; }
+.cursor-green { background-color: #22c55e !important; border-color: #22c55e !important; }
+.cursor-orange { background-color: #f59e0b !important; border-color: #f59e0b !important; }
+.cursor-pink { background-color: #ec4899 !important; border-color: #ec4899 !important; }
