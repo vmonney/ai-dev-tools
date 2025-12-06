@@ -5,7 +5,7 @@ services:
     runtime: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    plan: starter  # Free tier
+    plan: free  # Free tier
     region: oregon
 
     # Environment variables
@@ -16,7 +16,6 @@ services:
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
-        sync: false
       - key: ALGORITHM
         value: HS256
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
@@ -32,12 +31,12 @@ services:
     healthCheckPath: /health
 
     # Auto-deploy on push to main
-    autoDeploy: false  # Controlled by GitHub Actions instead
+    autoDeploy: true  # Automatically deploy when pushing to GitHub
 
 # PostgreSQL database
 databases:
   - name: codeconnect-db
-    plan: starter  # Free tier (1GB storage, expires after 90 days)
+    plan: free  # Free tier (1GB storage, expires after 90 days)
     databaseName: codeconnect
     user: codeconnect_user
     region: oregon

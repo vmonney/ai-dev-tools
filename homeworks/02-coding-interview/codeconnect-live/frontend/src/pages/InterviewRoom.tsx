@@ -38,6 +38,7 @@ export default function InterviewRoom() {
   const { user, isAuthenticated } = useAuthStore();
   const {
     getInterviewById,
+    fetchInterview,
     updateInterview,
     updateCode,
     executeCode,
@@ -52,30 +53,72 @@ export default function InterviewRoom() {
     disconnectFromInterview,
     sendCodeUpdate,
     sendLanguageChange,
+    currentInterview,
   } = useInterviewStore();
   const { getTemplateById } = useTemplateStore();
 
   const [interview, setInterview] = useState(id ? getInterviewById(id) : undefined);
+  const [isLoadingInterview, setIsLoadingInterview] = useState(false);
+
   const [language, setLanguage] = useState<ProgrammingLanguage>(interview?.language || 'javascript');
   const [code, setCode] = useState(interview?.code || '');
   const [output, setOutput] = useState<CodeExecution | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [theme, setTheme] = useState<'vs-dark' | 'light'>('vs-dark');
+  const [wsStatus, setWsStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting');
 
   const template = interview?.templateId ? getTemplateById(interview.templateId) : undefined;
   const isInterviewer = user?.role === 'interviewer' && interview?.interviewerId === user?.id;
   const interviewMessages = chatMessages.filter(m => m.interviewId === id);
 
+  // Fetch interview from API if not in local store
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/auth');
+      // Redirect to auth with return URL
+      navigate(`/auth?returnUrl=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
 
-    if (!interview && id) {
-      // Interview doesn't exist, redirect to dashboard
-      toast.error('Interview not found');
-      navigate('/dashboard');
+    if (!id) return;
+
+    // Check if interview exists in local store
+    const localInterview = getInterviewById(id);
+    if (localInterview) {
+      setInterview(localInterview);
+      return;
+    }
+
+    // If not in store and not already loading, fetch from API
+    if (!isLoadingInterview) {
+      setIsLoadingInterview(true);
+      fetchInterview(id).then((fetchedInterview) => {
+        setIsLoadingInterview(false);
+        if (!fetchedInterview) {
+          // Interview doesn't exist, redirect to dashboard
+          toast.error('Interview not found');
+          navigate('/dashboard');
+        } else {
+          setInterview(fetchedInterview);
+        }
+      });
+    }
+  }, [isAuthenticated, id, navigate, fetchInterview, getInterviewById, isLoadingInterview]);
+
+  // Sync with store's currentInterview
+  useEffect(() => {
+    if (currentInterview && currentInterview.id === id) {
+      setInterview(currentInterview);
+    }
+  }, [currentInterview, id]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // Already handled by the first useEffect
+      return;
+    }
+
+    // Wait for interview to load before joining
+    if (!interview || isLoadingInterview) {
       return;
     }
 
@@ -94,11 +137,18 @@ export default function InterviewRoom() {
       // Connect to WebSocket for real-time collaboration
       connectToInterview(id);
 
-      // Start interview if interviewer
+      // Update interview based on role
       if (isInterviewer && interview?.status === 'scheduled') {
+        // Start interview if interviewer
         updateInterview(id, {
           status: 'in-progress',
           startedAt: new Date().toISOString(),
+        });
+      } else if (user.role === 'candidate' && !interview?.candidateId) {
+        // Add candidate to interview if not already set
+        updateInterview(id, {
+          candidateId: user.id,
+          candidateName: user.name,
         });
       }
     }
